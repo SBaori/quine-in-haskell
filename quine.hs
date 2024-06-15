@@ -1,18 +1,21 @@
 src :: String
-src = "src :: String\nsrc = \"?\" \n\nprintSrc :: String -> String\nprintSrc \"\" = \"\" \nprintSrc (c:cs)\n    | fromEnum c == 63 = helper src ++ printSrc cs\n    | otherwise = c:printSrc cs \n    where\n        helper \"\" = \"\"\n        helper (c:cs)\n            | c == '\\n' = '\\\\':'n':helper cs\n            | c == '\\\\' = '\\\\':'\\\\':helper cs\n            | c == '\"' = '\\\\':'\"':helper cs\n            | otherwise = c:helper cs\n\nmain :: IO ()\nmain = putStr $ printSrc src" 
+src = "src :: String\nsrc = \"?\"\n\ngetSrc :: String\ngetSrc = construct src \n    where\n        construct :: String -> String\n        construct \"\" = \"\" \n        construct (c:cs)\n            | fromEnum c == 63 = helper src ++ construct cs\n            | otherwise = c:construct cs \n            where\n                helper \"\" = \"\"\n                helper (c:cs)\n                    | c == '\\n' = '\\\\':'n':helper cs\n                    | c == '\\\\' = '\\\\':'\\\\':helper cs\n                    | c == '\"' = '\\\\':'\"':helper cs\n                    | otherwise = c:helper cs\n\nmain :: IO ()\nmain = putStr getSrc"
 
-printSrc :: String -> String
-printSrc "" = "" 
-printSrc (c:cs)
-    | fromEnum c == 63 = helper src ++ printSrc cs
-    | otherwise = c:printSrc cs 
+getSrc :: String
+getSrc = construct src 
     where
-        helper "" = ""
-        helper (c:cs)
-            | c == '\n' = '\\':'n':helper cs
-            | c == '\\' = '\\':'\\':helper cs
-            | c == '"' = '\\':'"':helper cs
-            | otherwise = c:helper cs
+        construct :: String -> String
+        construct "" = "" 
+        construct (c:cs)
+            | fromEnum c == 63 = helper src ++ construct cs
+            | otherwise = c:construct cs 
+            where
+                helper "" = ""
+                helper (c:cs)
+                    | c == '\n' = '\\':'n':helper cs
+                    | c == '\\' = '\\':'\\':helper cs
+                    | c == '"' = '\\':'"':helper cs
+                    | otherwise = c:helper cs
 
 main :: IO ()
-main = putStr $ printSrc src
+main = putStr getSrc
